@@ -1,45 +1,26 @@
 package com.doro.accounts.controller;
 
-import com.doro.accounts.exception.AppException;
-import com.doro.accounts.model.Role;
 import com.doro.accounts.model.User;
-import com.doro.accounts.repository.RoleName;
-import com.doro.accounts.repository.RoleRepository;
-import com.doro.accounts.repository.UserRepository;
+import com.doro.accounts.sevice.UserService;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
-
 @RestController
 @RequestMapping("/api/auth")
 @Data
+@AllArgsConstructor
 public class AuthController {
-    private UserRepository userRepository;
-    private RoleRepository roleRepository;
-    private PasswordEncoder passwordEncoder;
-
+    private UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody User user) {
-        User existingUser = userRepository.findByName(user.getName());
-        if (existingUser != null) {
-            return new ResponseEntity<>("Username already exists", HttpStatus.BAD_REQUEST);
-        }
-
-        Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
-            .orElseThrow(() -> new AppException("User Role not set."));
-        user.setRole(userRole);
-
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        User result = userRepository.save(user);
-
-        return new ResponseEntity<>("Successful signup", HttpStatus.OK);
+    public ResponseEntity<User> signup(@RequestBody User user) {
+        User createdUser = userService.signup(user);
+        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 }
