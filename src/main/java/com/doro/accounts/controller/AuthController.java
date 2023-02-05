@@ -1,8 +1,12 @@
 package com.doro.accounts.controller;
 
+import com.doro.accounts.exception.AppException;
 import com.doro.accounts.model.Role;
 import com.doro.accounts.model.User;
+import com.doro.accounts.repository.RoleName;
+import com.doro.accounts.repository.RoleRepository;
 import com.doro.accounts.repository.UserRepository;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,9 +18,10 @@ import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/auth")
+@Data
 public class AuthController {
     private UserRepository userRepository;
-
+    private RoleRepository roleRepository;
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody User user) {
@@ -41,32 +46,10 @@ public class AuthController {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    @PostMapping("/changepass")
-    public ResponseEntity<String> changePassword(@RequestBody User user) {
-        // Implementation to handle password change
-        return new ResponseEntity<>("Successful password change", HttpStatus.OK);
-    }
+//    @PostMapping("/changepass")
+//    public ResponseEntity<String> changePassword(@RequestBody User user) {
+//        // Implementation to handle password change
+//        return new ResponseEntity<>("Successful password change", HttpStatus.OK);
+//    }
 
 }
