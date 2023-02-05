@@ -28,31 +28,18 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody User user) {
-        // Check if the user already exists
-        User existingUser = userRepository.findByUsername(user.getName());
+        User existingUser = userRepository.findByName(user.getName());
         if (existingUser != null) {
             return new ResponseEntity<>("Username already exists", HttpStatus.BAD_REQUEST);
         }
 
-        // Set default role for new user
         Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
             .orElseThrow(() -> new AppException("User Role not set."));
         user.setRole(userRole);
 
-        // Encrypt password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        // Save the user
         User result = userRepository.save(user);
 
         return new ResponseEntity<>("Successful signup", HttpStatus.OK);
     }
-
-
-//    @PostMapping("/changepass")
-//    public ResponseEntity<String> changePassword(@RequestBody User user) {
-//        // Implementation to handle password change
-//        return new ResponseEntity<>("Successful password change", HttpStatus.OK);
-//    }
-
 }
