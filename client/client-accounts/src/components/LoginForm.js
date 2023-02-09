@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import axiosInstance from '../axiosConfig'
+import axios from 'axios'
 
 const LoginForm = () => {
     const [formData, setFormData] = useState({
@@ -18,7 +18,7 @@ const LoginForm = () => {
 
     const handleSubmit = event => {
         event.preventDefault();
-        axiosInstance.post('http://localhost:8080/api/auth/signup', formData)
+        axios.post('http://localhost:8080/api/auth/signup', formData)
             .then(response => {
                 console.log(response.data);
             })
@@ -26,6 +26,14 @@ const LoginForm = () => {
                 console.error(error);
             });
     };
+
+    const changePassword = async (data) => {
+        try {
+            return await axios.post('/api/auth/changepass', data);
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     return (
         <form onSubmit={handleSubmit}>
@@ -72,7 +80,7 @@ const LoginForm = () => {
             <button type="submit">Submit</button>
         </form>
     );
-};
+}
 
 export default LoginForm
 
