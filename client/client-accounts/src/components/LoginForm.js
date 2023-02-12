@@ -1,5 +1,8 @@
 import React, {useState} from "react";
 import axios from 'axios'
+import {useDispatch} from "react-redux";
+import {SET_AUTHENTICATED} from "../redux/actions/actionTypes";
+import {useNavigate} from "react-router-dom";
 
 const LoginForm = () => {
     const [formData, setFormData] = useState({
@@ -8,6 +11,9 @@ const LoginForm = () => {
         email: '',
         password: ''
     });
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleChange = event => {
         setFormData({
@@ -20,20 +26,14 @@ const LoginForm = () => {
         event.preventDefault();
         axios.post('http://localhost:8080/api/auth/signup', formData)
             .then(response => {
+                dispatch({ type: SET_AUTHENTICATED, payload: response.data });
+                navigate('/dashboard');
                 console.log(response.data);
             })
             .catch(error => {
                 console.error(error);
             });
     };
-
-    const changePassword = async (data) => {
-        try {
-            return await axios.post('/api/auth/changepass', data);
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
     return (
         <form onSubmit={handleSubmit}>

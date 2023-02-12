@@ -1,7 +1,12 @@
 import { SET_AUTHENTICATED, SET_UNAUTHENTICATED } from "../actions/actionTypes";
 
 const initialState = {
-    isAuthenticated: false
+    isAuthenticated: false,
+    currentUser: {
+        name: "",
+        lastName: "",
+        email: ""
+    }
 };
 
 const authReducer = (state = initialState, action) => {
@@ -10,13 +15,20 @@ const authReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isAuthenticated: true,
-                currentUser: action.payload
+                currentUser: {
+                    ...state.currentUser,
+                    ...action.payload
+                }
             };
         case SET_UNAUTHENTICATED:
             return {
                 ...state,
                 isAuthenticated: false,
-                currentUser: {}
+                currentUser: {
+                    name: "",
+                    lastName: "",
+                    email: ""
+                }
             };
         default:
             return state;
